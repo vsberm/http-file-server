@@ -16,7 +16,7 @@ const (
 	addrEnvVarName           = "ADDR"
 	allowUploadsEnvVarName   = "UPLOADS"
 	allowDeletesEnvVarName   = "DELETES"
-	defaultAddr              = ":8080"
+	defaultAddr              = ":8081"
 	portEnvVarName           = "PORT"
 	quietEnvVarName          = "QUIET"
 	rootRoute                = "/"
@@ -69,7 +69,11 @@ func init() {
 	}
 }
 
+// http-file-server.exe -p 8081  -u -d /webserver=share
+// http-file-server.exe -p 8081  -u -d /share=share
 func main() {
+	// allowUploadsFlag = true
+	// allowDeletesFlag = true
 	addr, err := addr()
 	if err != nil {
 		log.Fatalf("address/port: %v", err)
@@ -77,6 +81,13 @@ func main() {
 	err = server(addr, routesFlag)
 	if err != nil {
 		log.Fatalf("start server: %v", err)
+	}
+}
+
+func faviconIco(w http.ResponseWriter, r *http.Request) {
+	if r.URL.RequestURI() == "/favicon.ico" {
+		// return
+		w.WriteHeader(404)
 	}
 }
 
@@ -104,6 +115,7 @@ func server(addr string, routes routes) error {
 		log.Printf("serving local path %q on %q", path, route)
 	}
 
+	mux.HandleFunc("/favicon.ico", faviconIco)
 	_, rootRouteTaken := handlers[rootRoute]
 	if !rootRouteTaken {
 		route := routes.Values[0].Route
