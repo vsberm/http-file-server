@@ -163,7 +163,7 @@ const directoryListingTemplateText = `
             <td class=number>{{.ModTime}}
                 {{- if $.AllowDelete }}
                 <div style="display: inline" class="copystyle">
-                    <form action="{{$.ReqPath}}" method="POST">
+                    <form action="{{$.ReqPath}}/" method="POST">
                         <input type="hidden" name="_method" value="DELETE">
                         <button type="submit" name="fileName" value="{{$.ReqPath}}/{{ .Name }}" style="background-color: #f17c7c; ">delete</button>
                     </form>
